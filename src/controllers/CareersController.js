@@ -2,7 +2,6 @@
 import pool from "../config/db.js";
 import fs from "fs";
 import path from "path";
-import { sendApplicationEmails } from "../../mailer.js";
 
 // ===============================
 // Submit application
@@ -78,17 +77,6 @@ export const apply = async (req, res) => {
     }
 
     await conn.commit();
-
-    // ✅ Send emails (applicant + HR)
-    await sendApplicationEmails({
-      applicantEmail: email,
-      applicantName: fullName,
-      hrEmail: process.env.HR_EMAIL,
-      position,
-      formData: { fullName, email, phone, position, coverLetter },
-      resumePath,
-      applicationUrl: `${process.env.APP_WEB_URL || ""}/admin/applications/${applicationId}`,
-    });
 
     res
       .status(201)
